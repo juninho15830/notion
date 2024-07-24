@@ -7,8 +7,8 @@ export function App() {
       <Header />
       <div className="bg-white">
         <main className="p-4">
-        <section className=" flex flex-col mt-1 max-w-[720px] m-auto">
-            <h1 className="text-[39px] font-bold border-b-[1px] border-gray-300">Front-end developer test project</h1>
+        <section className=" flex flex-col mt-1 max-w-[720px] m-auto leading-7">
+            <h1 className="text-[39px] font-bold border-b-[1px] border-gray-300 pb-4 mb-4">Front-end developer test project</h1>
             <p>Your goal is to make a page that looks exactly like this one, and the ability to create H1 text simply by typing / then 1, then typing text, and hitting enter. </p>
         </section>
           <Editor />
