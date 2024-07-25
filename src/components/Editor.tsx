@@ -11,8 +11,25 @@ import {
     RxChatBubble
 } from 'react-icons/rx'
 import { BubbleButton } from './BubbleButton'
+import { ChangeEvent, useState } from 'react'
 
 export function Editor() {
+    const [search, setSearch] = useState('')
+    const buttons = [
+        {
+            icon: "https://www.notion.so/images/blocks/text/en-US.png",
+            label: "Text",
+            description: "Just start writing with plain text.",
+            onClick: () => editor!.chain().focus().toggleHeading({ level: 6 }).run()
+        },
+        {
+            icon: "https://www.notion.so/images/blocks/header.57a7576a.png",
+            label: "Heading 1",
+            description: "Big section heading",
+            onClick: () => editor!.chain().focus().toggleHeading({ level: 1 }).run()
+        }
+    ];
+
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -25,6 +42,16 @@ export function Editor() {
             },
         },
     })
+
+    function handleSearch(event: ChangeEvent<HTMLInputElement>){
+        const query = event.target.value
+
+        setSearch(query)
+    }
+
+    const filteredButtons = search !== ''
+        ? buttons.filter(button => button.label.includes(search))
+        : buttons
 
     return (
         <>
@@ -52,20 +79,25 @@ export function Editor() {
                         return currentLineText === '/'
                     }}
                 >
-                    <button className='flex items-center gap-2 p-1 rounded min-w-[280px] hover:bg-gray-300' onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}>
-                        <img src="https://www.notion.so/images/blocks/text/en-US.png" alt="Text" className='w-12 border border-gray-600 rounded' />
-                        <div className='flex flex-col text-left'>
-                            <span className='text-sm'>Text</span>
-                            <span className='text-xs text-gray-400'>Just start writing with plain text.</span>
-                        </div>
-                    </button>
-                    <button className='flex items-center gap-2 p-1 rounded min-w-[280px] hover:bg-gray-300' onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>
-                        <img src="https://www.notion.so/images/blocks/header.57a7576a.png" alt="Heading" className='w-12 border border-gray-600 rounded' />
-                        <div className='flex flex-col text-left'>
-                            <span className='text-sm'>Heading 1</span>
-                            <span className='text-xs text-gray-400'>Big section heading</span>
-                        </div>
-                    </button>
+                    <input 
+                        type="text" 
+                        placeholder='Search' 
+                        onChange={handleSearch}
+                    />
+
+                    {filteredButtons.map((button, index) => (
+                        <button
+                            key={index}
+                            className='flex items-center gap-2 p-1 rounded min-w-[280px] hover:bg-gray-300'
+                            onClick={button.onClick}
+                        >
+                            <img src={button.icon} alt={button.label} className='w-12 border border-gray-600 rounded' />
+                            <div className='flex flex-col text-left'>
+                                <span className='text-sm'>{button.label}</span>
+                                <span className='text-xs text-gray-400'>{button.description}</span>
+                            </div>
+                        </button>
+                    ))}
                 </FloatingMenu>
             )}
             {editor && (
