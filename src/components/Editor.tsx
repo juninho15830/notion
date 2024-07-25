@@ -1,7 +1,7 @@
-import { useEditor, EditorContent, BubbleMenu, FloatingMenu } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import { Placeholder }from './Placeholder'
-import { InitialContent } from './InitialContent'
+import { useEditor, EditorContent, BubbleMenu, FloatingMenu } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import { Placeholder } from './Placeholder';
+import { InitialContent } from './InitialContent';
 import {
     RxFontBold,
     RxFontItalic,
@@ -9,12 +9,14 @@ import {
     RxCode,
     RxChevronDown,
     RxChatBubble
-} from 'react-icons/rx'
-import { BubbleButton } from './BubbleButton'
-import { ChangeEvent, useState } from 'react'
+} from 'react-icons/rx';
+import { BubbleButton } from './BubbleButton';
+import { ChangeEvent, useState, useEffect, useCallback } from 'react';
 
 export function Editor() {
-    const [search, setSearch] = useState('')
+    const [search, setSearch] = useState('');
+    const [selectedIndex, setSelectedIndex] = useState(0);
+
     const buttons = [
         {
             icon: "https://www.notion.so/images/blocks/text/en-US.png",
@@ -41,20 +43,50 @@ export function Editor() {
                 class: 'outline-none',
             },
         },
-    })
+    });
 
-    function handleSearch(event: ChangeEvent<HTMLInputElement>){
-        const query = event.target.value.toLowerCase().trim()
-
-        setSearch(query)
+    function handleSearch(event: ChangeEvent<HTMLInputElement>) {
+        const query = event.target.value.toLowerCase();
+        setSearch(query);
+        setSelectedIndex(0); // Reset selected index on search
     }
 
     const filteredButtons = search !== ''
-        ? buttons.filter(button => 
+        ? buttons.filter(button =>
             button.description.toLowerCase().includes(search) ||
             button.label.toLowerCase().includes(search)
         )
-        : buttons
+        : buttons;
+
+    const handleKeyDown = useCallback((event: KeyboardEvent) => {
+        if (document.activeElement && (document.activeElement as HTMLElement).tagName === 'INPUT') {
+            // Handle Enter and Escape keys when input is focused
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                if (filteredButtons.length > 0) {
+                    filteredButtons[selectedIndex].onClick();
+                }
+            } else if (event.key === 'Escape') {
+                setSearch('');
+            }
+            return;
+        }
+
+        if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            setSelectedIndex((prevIndex) => (prevIndex + 1) % filteredButtons.length);
+        } else if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            setSelectedIndex((prevIndex) => (prevIndex - 1 + filteredButtons.length) % filteredButtons.length);
+        }
+    }, [selectedIndex, filteredButtons]);
+
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [handleKeyDown]);
 
     return (
         <>
@@ -75,39 +107,48 @@ export function Editor() {
             {editor && (
                 <FloatingMenu
                     editor={editor}
-                    className=' bg-white p-2  border-gray-300 flex flex-col font-medium leading-none shadow-xl shadow-black/20 rounded-lg overflow-hidden mt-56 border'
+                    className='bg-white p-2 border-gray-300 flex flex-col font-medium leading-none shadow-xl shadow-black/20 rounded-lg overflow-hidden mt-56 border'
                     shouldShow={({ state }) => {
-                        const { $from } = state.selection
-                        const currentLineText = $from.nodeBefore?.textContent
-                        return currentLineText === '/'
+                        const { $from } = state.selection;
+                        const currentLineText = $from.nodeBefore?.textContent;
+                        if (currentLineText === '/') {
+                            setSearch(''); // Reset search when menu is shown
+                            return true;
+                        }
+                        return false;
                     }}
                 >
                     <span className='font-bold mb-4'>Add blocks</span>
-                    <input 
+                    <input
                         className='mb-2 rounded-sm outline-none'
-                        type="text" 
-                        placeholder='Search' 
+                        type="text"
+                        placeholder='Search'
                         onChange={handleSearch}
+                        value={search}
                     />
-
-                    {filteredButtons.map((button, index) => (
-                        <button
-                            key={index}
-                            className='flex items-center gap-2 p-1 rounded min-w-[280px] hover:bg-gray-300'
-                            onClick={button.onClick}
-                        >
-                            <img src={button.icon} alt={button.label} className='w-12 border border-gray-600 rounded' />
-                            <div className='flex flex-col text-left'>
-                                <span className='text-sm'>{button.label}</span>
-                                <span className='text-xs text-gray-400'>{button.description}</span>
-                            </div>
-                        </button>
-                    ))}
+                    {filteredButtons.length === 0 ? (
+                        <div className='text-sm text-gray-500'>Formato não encontrado</div>
+                    ) : (
+                        filteredButtons.map((button, index) => (
+                            <button
+                                key={index}
+                                className={`flex items-center gap-2 p-1 rounded min-w-[280px] hover:bg-gray-300 ${index === selectedIndex ? 'bg-gray-300' : ''}`}
+                                onClick={button.onClick}
+                                onMouseEnter={() => setSelectedIndex(index)}
+                            >
+                                <img src={button.icon} alt={button.label} className='w-12 border border-gray-600 rounded' />
+                                <div className='flex flex-col text-left'>
+                                    <span className='text-sm'>{button.label}</span>
+                                    <span className='text-xs text-gray-400'>{button.description}</span>
+                                </div>
+                            </button>
+                        ))
+                    )}
                 </FloatingMenu>
             )}
             {editor && (
                 <BubbleMenu
-                    className=' bg-white border-gray-300 border flex font-medium leading-none shadow-xl shadow-black/20 rounded overflow-hidden divide-x divide-gray-300'
+                    className='bg-white border-gray-600 flex font-medium leading-none shadow-xl shadow-black/20 rounded-lg overflow-hidden divide-x divide-gray-500'
                     editor={editor}
                 >
                     <BubbleButton>
@@ -147,5 +188,5 @@ export function Editor() {
                 </BubbleMenu>
             )}
         </>
-    )
+    );
 }
