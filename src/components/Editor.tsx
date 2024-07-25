@@ -107,7 +107,7 @@ export function Editor() {
             )}
             {editor && (
                 <BubbleMenu
-                    className=' bg-white border-gray-300 border flex font-medium leading-none shadow-xl shadow-black/20 rounded-sm overflow-hidden divide-x divide-gray-500'
+                    className=' bg-white border-gray-300 border flex font-medium leading-none shadow-xl shadow-black/20 rounded-s overflow-hidden divide-x divide-gray-300'
                     editor={editor}
                 >
                     <BubbleButton>
