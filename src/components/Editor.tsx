@@ -28,7 +28,6 @@ export function Editor() {
             description: "Big section heading",
             onClick: () => editor!.chain().focus().toggleHeading({ level: 1 }).run()
         }
-        // Adicione mais botões conforme necessário
     ];
 
     const editor = useEditor({
@@ -45,13 +44,16 @@ export function Editor() {
     })
 
     function handleSearch(event: ChangeEvent<HTMLInputElement>){
-        const query = event.target.value
+        const query = event.target.value.toLowerCase().trim()
 
         setSearch(query)
     }
 
     const filteredButtons = search !== ''
-        ? buttons.filter(button => button.label.includes(search))
+        ? buttons.filter(button => 
+            button.description.toLowerCase().includes(search) ||
+            button.label.toLowerCase().includes(search)
+        )
         : buttons
 
     return (
