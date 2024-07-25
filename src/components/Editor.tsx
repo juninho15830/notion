@@ -28,6 +28,7 @@ export function Editor() {
             description: "Big section heading",
             onClick: () => editor!.chain().focus().toggleHeading({ level: 1 }).run()
         }
+        // Adicione mais botões conforme necessário
     ];
 
     const editor = useEditor({
@@ -72,14 +73,16 @@ export function Editor() {
             {editor && (
                 <FloatingMenu
                     editor={editor}
-                    className=' bg-white py-2 px-1  border-gray-600 flex flex-col font-medium leading-none shadow-xl shadow-black/20 rounded-lg overflow-hidden mt-36'
+                    className=' bg-white p-2  border-gray-300 flex flex-col font-medium leading-none shadow-xl shadow-black/20 rounded-lg overflow-hidden mt-56 border'
                     shouldShow={({ state }) => {
                         const { $from } = state.selection
                         const currentLineText = $from.nodeBefore?.textContent
                         return currentLineText === '/'
                     }}
                 >
+                    <span className='font-bold mb-4'>Add blocks</span>
                     <input 
+                        className='mb-2 rounded-sm outline-none'
                         type="text" 
                         placeholder='Search' 
                         onChange={handleSearch}
