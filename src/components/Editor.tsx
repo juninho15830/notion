@@ -29,6 +29,18 @@ export function Editor() {
             label: "Heading 1",
             description: "Big section heading",
             onClick: () => editor!.chain().focus().toggleHeading({ level: 1 }).run()
+        },
+        {
+            icon: "https://www.notion.so/images/blocks/subheader.9aab4769.png",
+            label: "Heading 2",
+            description: "Middle section heading",
+            onClick: () => editor!.chain().focus().toggleHeading({ level: 2 }).run()
+        },
+        {
+            icon: "https://www.notion.so/images/blocks/subsubheader.d0ed0bb3.png",
+            label: "Heading 3",
+            description: "Small section heading",
+            onClick: () => editor!.chain().focus().toggleHeading({ level: 3 }).run()
         }
     ];
 
@@ -95,7 +107,7 @@ export function Editor() {
                 onClick={() => editor?.view.focus()}
             >
                 <EditorContent
-                    className="prose-h1:text-3xl prose-h1:font-bold"
+                    className="prose-h1:text-3xl prose-h1:font-bold prose-h2:text-2xl prose-h2:font-bold prose-h3:text-xl prose-h3:font-bold"
                     editor={editor}
                 />
                 {!editor?.getText() && (
