@@ -60,7 +60,7 @@ export function Editor() {
     function handleSearch(event: ChangeEvent<HTMLInputElement>) {
         const query = event.target.value.toLowerCase();
         setSearch(query);
-        setSelectedIndex(0); // Reset selected index on search
+        setSelectedIndex(0); 
     }
 
     const filteredButtons = search !== ''
@@ -118,7 +118,7 @@ export function Editor() {
             {editor && (
                 <FloatingMenu
                     editor={editor}
-                    className='bg-white p-2 border-gray-300 flex flex-col font-medium leading-none shadow-xl shadow-black/20 rounded-lg overflow-hidden mt-56 border'
+                    className='bg-white p-2 border-gray-300 flex flex-col font-medium leading-none shadow-xl shadow-black/20 rounded-lg overflow-hidden mt-[340px] border'
                     shouldShow={({ state }) => {
                         const { $from } = state.selection;
                         const currentLineText = $from.nodeBefore?.textContent;
