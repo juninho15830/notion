@@ -72,7 +72,6 @@ export function Editor() {
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
         if (document.activeElement && (document.activeElement as HTMLElement).tagName === 'INPUT') {
-            // Handle Enter and Escape keys when input is focused
             if (event.key === 'Enter') {
                 event.preventDefault();
                 if (filteredButtons.length > 0) {
@@ -124,7 +123,7 @@ export function Editor() {
                         const { $from } = state.selection;
                         const currentLineText = $from.nodeBefore?.textContent;
                         if (currentLineText === '/') {
-                            setSearch(''); // Reset search when menu is shown
+                            setSearch('');
                             return true;
                         }
                         return false;
@@ -139,7 +138,7 @@ export function Editor() {
                         value={search}
                     />
                     {filteredButtons.length === 0 ? (
-                        <div className='text-sm text-gray-500'>Formato não encontrado</div>
+                        <p className='text-sm text-gray-500'>format not found</p>
                     ) : (
                         filteredButtons.map((button, index) => (
                             <button
