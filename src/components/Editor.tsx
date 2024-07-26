@@ -138,7 +138,7 @@ export function Editor() {
                         value={search}
                     />
                     {filteredButtons.length === 0 ? (
-                        <p className='text-sm text-gray-500'>format not found</p>
+                        <p className='text-sm text-gray-500'>Format not found</p>
                     ) : (
                         filteredButtons.map((button, index) => (
                             <button
