@@ -118,7 +118,7 @@ export function Editor() {
             {editor && (
                 <FloatingMenu
                     editor={editor}
-                    className='bg-white p-2 border-gray-300 flex flex-col font-medium leading-none shadow-xl shadow-black/20 rounded-lg overflow-hidden mt-[340px] border'
+                    className='bg-white p-2 border-gray-300 flex flex-col font-medium leading-none shadow-xl shadow-black/20 rounded-lg overflow-hidden mt-80 border'
                     shouldShow={({ state }) => {
                         const { $from } = state.selection;
                         const currentLineText = $from.nodeBefore?.textContent;
